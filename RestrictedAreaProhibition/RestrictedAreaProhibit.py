@@ -1,3 +1,4 @@
+import pyttsx3
 import winsound
 from ultralytics import YOLO
 import cv2
@@ -6,9 +7,7 @@ import math
 from sort import *
 
 cap=cv2.VideoCapture('../videos/Children-restricted-area.mp4')
-
 model=YOLO('../yolo-weights/bestn.pt')
-count=0
 classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
               "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat",
               "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella",
@@ -20,9 +19,9 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
               "teddy bear", "hair drier", "toothbrush"
               ]
-maskblack=cv2.imread("childRestrictblackmask.png")
-tobeshown=cv2.imread("childRestrictredmask.png")
-
+maskblack=cv2.imread("masks/childRestrictblackmask.png")
+tobeshown=cv2.imread("masks/childRestrictredmask.png")
+count2=0
 # Tracker
 tracker=Sort(max_age=20,min_hits=3,iou_threshold=0.3)
 count=0
@@ -51,15 +50,20 @@ while(True):
             cls=int(box.cls[0])
             currentClass=classNames[cls]
             if(currentClass=="person" and confidence>0.3):
-                # cvzone.cornerRect(img, (x1, y1, x2 - x1, y2 - y1), l=9,rt=5)
+                if count>7 and count<12:
+                    text_speech = pyttsx3.init()
+                    text_speech.say("Entry is prohibited")
+                    text_speech.runAndWait()
+                    count2+=1
+                    # cvzone.cornerRect(img, (x1, y1, x2 - x1, y2 - y1), l=9,rt=5)
                 currentArray=np.array([x1,y1,x2,y2,confidence])
                 detections=np.vstack((detections,currentArray))
                 cvzone.putTextRect(img, f'Entry Not allowed - Image Captured ',(25, 25), scale=1, thickness=1)
                 filename = "Image" + str(count) + ".jpg"
-                if count<100:
-                    cv2.imwrite(filename, img)
-                count+=1
+                cv2.imwrite(filename, img)
+                count2+=1
                 winsound.Beep(1445, 100)
+                count+=1
 
         #     finding center
             cx,cy=x1+(x2-x1)//2,y1+(y2-y1)//2

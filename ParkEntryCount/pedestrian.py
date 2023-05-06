@@ -6,7 +6,7 @@ from sort import *
 import winsound
 
 videolink='../Videos/parkmobcount.mp4'
-cap=cv2.VideoCapture(videolink) #for video
+cap=cv2.VideoCapture(videolink)
 
 vcap = cv2.VideoCapture(videolink)  # 0=camera
 width = int(vcap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -48,7 +48,7 @@ exitid=[]
 while(True):
     success , img=cap.read()
     imgRegion=cv2.bitwise_and(img,img)
-    results=model(imgRegion,stream=True)
+    results=model(imgRegion)
     detections=np.empty((0,5))
     for r in results:
         boxes=r.boxes
