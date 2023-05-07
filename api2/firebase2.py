@@ -1,7 +1,7 @@
 import pyrebase
 
 config = {
-    "apiKey": "AIzaSyCXHNMiEv2ma9GBPO30tqclx3YzGq7a0Os",
+    "apiKey": "keyhere",
     "authDomain": "nmit-583b4.firebaseapp.com",
     "projectId": "nmit-583b4",
     "storageBucket": "nmit-583b4.appspot.com",
